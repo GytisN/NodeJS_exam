@@ -1,16 +1,13 @@
 const express = require("express");
-const PORT = process.env.PORT || 3000;
-
+const connection = require("./config/db");
+const mysql = require("mysql");
+const { error } = require("console");
 const app = express();
+const port = process.env.PORT || 3000;
+
+
 app.use(express.json());
 
-
-//version route
-app.get("/version", (req, res) => {
-    res.json({ version: "v0.1.0" });
-  });
-
-  //listen for requests
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
+app.listen(port, () => {
+    console.log('Server is listening:', port);
 });

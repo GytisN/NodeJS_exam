@@ -1,10 +1,8 @@
-create table Orders(
-primary key (orderID),
-OrderID INT,
-ShipperID INT,
-CustomerID INT,
-EmployeeID INT,
-OrderDate DATE,
-FOREIGN KEY (OrderID) REFERENCES Shippers(ShipperID),
-FOREIGN KEY (ShipperID) REFERENCES Employees(EmployeeID)
+CREATE TABLE Orders (
+    OrderID INT PRIMARY KEY,
+    ShipperID INT,
+    CustomerID INT,
+    OrderDate DATE,
+    FOREIGN KEY (ShipperID) REFERENCES Shippers(ShipperID),
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
 );

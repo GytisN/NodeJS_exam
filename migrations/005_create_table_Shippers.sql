@@ -1,6 +1,5 @@
-create table Shippers(
-primary key (ShipperID),
-ShipperID INT,
-CompanyName VARCHAR(255),
-Phone INT(16)
+CREATE TABLE Shippers (
+    ShipperID INT PRIMARY KEY,
+    CompanyName VARCHAR(255),
+    Phone VARCHAR(16)
 );
