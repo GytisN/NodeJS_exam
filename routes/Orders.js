@@ -4,7 +4,7 @@ const mysql = require("mysql");
 const connection = require("../config/db");
 
 // GET all orders
-router.get('/', (req, res) => {
+router.get('/api/v1/orders', (req, res) => {
   connection.query('SELECT * FROM Orders', (error, results) => {
     if (error) throw error;
     res.send(results);
@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
 });
 
 // GET an order by ID
-router.get('/:id', (req, res) => {
+router.get('/api/v1/orders:id', (req, res) => {
   const { id } = req.params;
   connection.query('SELECT * FROM Orders WHERE OrderID = ?', [id], (error, results) => {
     if (error) throw error;
@@ -21,7 +21,7 @@ router.get('/:id', (req, res) => {
 });
 
 // CREATE a new order
-router.post('/', (req, res) => {
+router.post('/api/v1/orders', (req, res) => {
   const { ShipperID, CustomerID, OrderDate } = req.body;
   connection.query('INSERT INTO Orders SET ?', { ShipperID, CustomerID, OrderDate }, (error, results) => {
     if (error) throw error;
@@ -30,7 +30,7 @@ router.post('/', (req, res) => {
 });
 
 // UPDATE an order
-router.put('/:id', (req, res) => {
+router.put('/api/v1/orders:id', (req, res) => {
   const { ShipperID, CustomerID, OrderDate } = req.body;
   const { id } = req.params;
   connection.query('UPDATE Orders SET ShipperID = ?, CustomerID = ?, OrderDate = ? WHERE OrderID = ?', [ShipperID, CustomerID, OrderDate, id], (error, results) => {
@@ -40,7 +40,7 @@ router.put('/:id', (req, res) => {
 });
 
 // DELETE an order
-router.delete('/:id', (req, res) => {
+router.delete('/api/v1/orders:id', (req, res) => {
   const { id } = req.params;
   connection.query('DELETE FROM Orders WHERE OrderID = ?', [id], (error, results) => {
     if (error) throw error;

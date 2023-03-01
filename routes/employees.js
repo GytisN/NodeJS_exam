@@ -4,7 +4,7 @@ const mysql = require("mysql");
 const connection = require("../config/db");
 
 // GET all employees
-router.get('/', (req, res) => {
+router.get('/api/v1/employees', (req, res) => {
   const sql = 'SELECT * FROM Employees';
   connection.query(sql, (error, results) => {
     if (error) throw error;
@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
 });
 
 // GET employee by ID
-router.get('/:id', (req, res) => {
+router.get('/api/v1/employees:id', (req, res) => {
   const { id } = req.params;
   const sql = `SELECT * FROM Employees WHERE EmployeeID = ${id}`;
   connection.query(sql, (error, results) => {
@@ -23,7 +23,7 @@ router.get('/:id', (req, res) => {
 });
 
 // POST new employee
-router.post('/', (req, res) => {
+router.post('/api/v1/employees', (req, res) => {
   const { LastName, FirstName, Title, TitleOfCourtesy, BirthDate, HireDate, Adress } = req.body;
   const sql = `INSERT INTO Employees (LastName, FirstName, Title, TitleOfCourtesy, BirthDate, HireDate, Adress) VALUES ('${LastName}', '${FirstName}', '${Title}', '${TitleOfCourtesy}', '${BirthDate}', '${HireDate}', '${Adress}')`;
   connection.query(sql, (error, result) => {
@@ -33,7 +33,7 @@ router.post('/', (req, res) => {
 });
 
 // PUT update employee by ID
-router.put('/:id', (req, res) => {
+router.put('/api/v1/employees:id', (req, res) => {
   const { id } = req.params;
   const { LastName, FirstName, Title, TitleOfCourtesy, BirthDate, HireDate, Adress } = req.body;
   const sql = `UPDATE Employees SET LastName = '${LastName}', FirstName = '${FirstName}', Title = '${Title}', TitleOfCourtesy = '${TitleOfCourtesy}', BirthDate = '${BirthDate}', HireDate = '${HireDate}', Adress = '${Adress}' WHERE EmployeeID = ${id}`;
@@ -44,7 +44,7 @@ router.put('/:id', (req, res) => {
 });
 
 // DELETE employee by ID
-router.delete('/:id', (req, res) => {
+router.delete('/api/v1/employees:id', (req, res) => {
   const { id } = req.params;
   const sql = `DELETE FROM Employees WHERE EmployeeID = ${id}`;
   connection.query(sql, (error, result) => {

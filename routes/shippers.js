@@ -4,7 +4,7 @@ const mysql = require("mysql");
 const connection = require("../config/db");
 
 // GET all shippers
-router.get('/', async (req, res) => {
+router.get('/api/v1/shippers', async (req, res) => {
   try {
     let pool = await sql.connect(config);
     let shippers = await pool.request().query('SELECT * from Shippers');
@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
 });
 
 // GET a specific shipper by ID
-router.get('/:id', async (req, res) => {
+router.get('/api/v1/shippers:id', async (req, res) => {
   try {
     let pool = await sql.connect(config);
     let shipper = await pool.request()
@@ -35,7 +35,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // POST a new shipper
-router.post('/', async (req, res) => {
+router.post('/api/v1/shippers', async (req, res) => {
   try {
     let pool = await sql.connect(config);
     let result = await pool.request()
@@ -51,7 +51,7 @@ router.post('/', async (req, res) => {
 });
 
 // PUT (update) an existing shipper by ID
-router.put('/:id', async (req, res) => {
+router.put('/api/v1/shippers:id', async (req, res) => {
   try {
     let pool = await sql.connect(config);
     let result = await pool.request()
@@ -72,7 +72,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // DELETE a shipper by ID
-router.delete('/:id', async (req, res) => {
+router.delete('/api/v1/shippers:id', async (req, res) => {
   try {
     let pool = await sql.connect(config);
     let result = await pool.request()
