@@ -1,4 +1,4 @@
-CREATE TABLE Orders (
+CREATE TABLE Orders(
     OrderID INT NOT NULL  AUTO_INCREMENT,
     ShipperID INT,
     CustomerID INT,

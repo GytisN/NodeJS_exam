@@ -1,4 +1,4 @@
-CREATE TABLE OrderDetails (
+CREATE TABLE OrderDetails(
     OrderID INT NOT NULL AUTO_INCREMENT,
     ProductID INT,
     UnitPrice DECIMAL(10,2),

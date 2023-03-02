@@ -1,4 +1,4 @@
-CREATE TABLE Products (
+CREATE TABLE Products(
     ProductID INT NOT NULL AUTO_INCREMENT,
     ProductName VARCHAR(255),
     SupplierID INT,

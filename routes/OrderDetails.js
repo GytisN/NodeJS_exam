@@ -1,72 +1,101 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const mysql = require("mysql");
-const connection = require("../config/db");
+const connection = require('../config/db');
 
-
-// GET all order details
+// Get all order details
 router.get('/api/v1/OrderDetails', (req, res) => {
-  db.query('SELECT * FROM OrderDetails', (err, result) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send('Error fetching order details');
-    } else {
-      res.json(result);
+  const sql = 'SELECT * FROM OrderDetails';
+
+  connection.query(sql, (error, results, fields) => {
+    if (error) {
+      console.error(error.message);
+      res.status(500).send('Server Error');
+      return;
     }
+
+    res.json(results);
   });
 });
 
-// GET order details for a specific order
-router.get('/api/v1/OrderDetails:orderId', (req, res) => {
-  const { orderId } = req.params;
-  db.query('SELECT * FROM OrderDetails WHERE OrderID = ?', [orderId], (err, result) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send(`Error fetching order details for order ${orderId}`);
-    } else {
-      res.json(result);
+// Get order detail by order ID
+router.get('/api/v1/OrderDetails/:orderID', (req, res) => {
+  const orderID = req.params.orderID;
+  const sql = 'SELECT * FROM OrderDetails WHERE OrderID = ?';
+
+  connection.query(sql, [orderID], (error, results, fields) => {
+    if (error) {
+      console.error(error.message);
+      res.status(500).send('Server Error');
+      return;
     }
+
+    if (results.length === 0) {
+      res.status(404).send('Order detail not found');
+      return;
+    }
+
+    res.json(results[0]);
   });
 });
 
-// POST new order details
+// Add new order detail
 router.post('/api/v1/OrderDetails', (req, res) => {
   const { OrderID, ProductID, UnitPrice, Quantity, Discount } = req.body;
-  db.query('INSERT INTO OrderDetails (OrderID, ProductID, UnitPrice, Quantity, Discount) VALUES (?, ?, ?, ?, ?)', [OrderID, ProductID, UnitPrice, Quantity, Discount], (err, result) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send('Error creating new order details');
-    } else {
-      res.status(201).send('New order details created');
+  const sql = 'INSERT INTO OrderDetails (OrderID, ProductID, UnitPrice, Quantity, Discount) VALUES (?, ?, ?, ?, ?)';
+
+  connection.query(sql, [OrderID, ProductID, UnitPrice, Quantity, Discount], (error, results, fields) => {
+    if (error) {
+      console.error(error.message);
+      res.status(500).send('Server Error');
+      return;
     }
+
+    res.json({ message: 'Order detail added successfully' });
   });
 });
 
-// PUT update order details for a specific order and product
-router.put('/api/v1/OrderDetails:orderId/:productId', (req, res) => {
-  const { orderId, productId } = req.params;
+// Update existing order detail
+router.put('/api/v1/OrderDetails/:productID', (req, res) => {
+  const orderID = req.params.orderID;
+  const productID = req.params.productID;
   const { UnitPrice, Quantity, Discount } = req.body;
-  db.query('UPDATE OrderDetails SET UnitPrice = ?, Quantity = ?, Discount = ? WHERE OrderID = ? AND ProductID = ?',
-          [UnitPrice, Quantity, Discount, orderId, productId], (err, result) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send(`Error updating order details for order ${orderId} and product ${productId}`);
-    } else {
-      res.status(200).send(`Order details for order ${orderId} and product ${productId} updated`);
+  const sql = 'UPDATE OrderDetails SET UnitPrice = ?, Quantity = ?, Discount = ? WHERE OrderID = ? AND ProductID = ?';
+
+  connection.query(sql, [UnitPrice, Quantity, Discount, orderID, productID], (error, results, fields) => {
+    if (error) {
+      console.error(error.message);
+      res.status(500).send('Server Error');
+      return;
     }
+
+    if (results.affectedRows === 0) {
+      res.status(404).send('Order detail not found');
+      return;
+    }
+
+    res.json({ message: 'Order detail updated successfully' });
   });
 });
 
-// DELETE order details for a specific order and product
-router.delete('/api/v1/OrderDetails:orderId/:productId', (req, res) => {
-  const { orderId, productId } = req.params;
-  db.query('DELETE FROM OrderDetails WHERE OrderID = ? AND ProductID = ?', [orderId, productId], (err, result) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send(`Error deleting order details for order ${orderId} and product ${productId}`);
-    } else {
-      res.status(200).send(`Order details for order ${orderId} and product ${productId} deleted`);
+// Delete order detail
+router.delete('/api/v1/OrderDetails/:productID', (req, res) => {
+  const orderID = req.params.orderID;
+  const productID = req.params.productID;
+  const sql = 'DELETE FROM OrderDetails WHERE OrderID = ? AND ProductID = ?';
+
+  connection.query(sql, [orderID, productID], (error, results, fields) => {
+    if (error) {
+      console.error(error.message);
+      res.status(500).send('Server Error');
+      return;
     }
+
+    if (results.affectedRows === 0) {
+      res.status(404).send('Order detail not found');
+      return;
+    }
+
+    res.json({ message: 'Order detail deleted successfully' });
   });
 });
 

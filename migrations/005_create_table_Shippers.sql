@@ -1,4 +1,4 @@
-CREATE TABLE Shippers (
+CREATE TABLE Shippers(
     ShipperID INT NOT NULL AUTO_INCREMENT,
     CompanyName VARCHAR(255),
     Phone VARCHAR(16),

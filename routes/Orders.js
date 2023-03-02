@@ -12,7 +12,7 @@ router.get('/api/v1/orders', (req, res) => {
 });
 
 // GET an order by ID
-router.get('/api/v1/orders:id', (req, res) => {
+router.get('/api/v1/orders/:id', (req, res) => {
   const { id } = req.params;
   connection.query('SELECT * FROM Orders WHERE OrderID = ?', [id], (error, results) => {
     if (error) throw error;
@@ -30,7 +30,7 @@ router.post('/api/v1/orders', (req, res) => {
 });
 
 // UPDATE an order
-router.put('/api/v1/orders:id', (req, res) => {
+router.put('/api/v1/orders/:id', (req, res) => {
   const { ShipperID, CustomerID, OrderDate } = req.body;
   const { id } = req.params;
   connection.query('UPDATE Orders SET ShipperID = ?, CustomerID = ?, OrderDate = ? WHERE OrderID = ?', [ShipperID, CustomerID, OrderDate, id], (error, results) => {
@@ -40,7 +40,7 @@ router.put('/api/v1/orders:id', (req, res) => {
 });
 
 // DELETE an order
-router.delete('/api/v1/orders:id', (req, res) => {
+router.delete('/api/v1/orders/:id', (req, res) => {
   const { id } = req.params;
   connection.query('DELETE FROM Orders WHERE OrderID = ?', [id], (error, results) => {
     if (error) throw error;

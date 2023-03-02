@@ -1,4 +1,4 @@
-CREATE TABLE Employees (
+CREATE TABLE Employees(
     EmployeeID INT NOT NULL  AUTO_INCREMENT,
     LastName VARCHAR(255),
     FirstName VARCHAR(255),

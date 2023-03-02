@@ -1,93 +1,58 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const mysql = require("mysql");
-const connection = require("../config/db");
+const mysql = require('mysql');
+const connection = require('../config/db');
 
-// GET all shippers
-router.get('/api/v1/shippers', async (req, res) => {
-  try {
-    let pool = await sql.connect(config);
-    let shippers = await pool.request().query('SELECT * from Shippers');
-    res.json(shippers.recordset);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Server error');
-  }
+// Get all shippers
+router.get('/api/v1/shippers', (req, res) => {
+  const sql = 'SELECT * FROM Shippers';
+  connection.query(sql, (error, results) => {
+    if (error) throw error;
+    res.json(results);
+  });
 });
 
-// GET a specific shipper by ID
-router.get('/api/v1/shippers:id', async (req, res) => {
-  try {
-    let pool = await sql.connect(config);
-    let shipper = await pool.request()
-      .input('id', sql.Int, req.params.id)
-      .query('SELECT * from Shippers WHERE ShipperID = @id');
-
-    if (shipper.recordset.length === 0) {
-      res.status(404).send('Shipper not found');
-    } else {
-      res.json(shipper.recordset[0]);
-    }
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Server error');
-  }
+// Get a single shipper
+router.get('/api/v1/shippers/:id', (req, res) => {
+  const { id } = req.params;
+  const sql = `SELECT * FROM Shippers WHERE ShipperID = ${mysql.escape(id)}`;
+  connection.query(sql, (error, result) => {
+    if (error) throw error;
+    res.json(result[0]);
+  });
 });
 
-// POST a new shipper
-router.post('/api/v1/shippers', async (req, res) => {
-  try {
-    let pool = await sql.connect(config);
-    let result = await pool.request()
-      .input('CompanyName', sql.VarChar(255), req.body.CompanyName)
-      .input('Phone', sql.VarChar(16), req.body.Phone)
-      .query('INSERT INTO Shippers (CompanyName, Phone) VALUES (@CompanyName, @Phone)');
-
-    res.status(201).send('Shipper added');
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Server error');
-  }
+// Create a shipper
+router.post('/api/v1/shippers', (req, res) => {
+  const { CompanyName, Phone } = req.body;
+  const sql = `INSERT INTO Shippers (CompanyName, Phone) VALUES (${mysql.escape(CompanyName)}, ${mysql.escape(Phone)})`;
+  connection.query(sql, (error, result) => {
+    if (error) throw error;
+    const newShipper = { ShipperID: result.insertId, CompanyName, Phone };
+    res.json(newShipper);
+  });
 });
 
-// PUT (update) an existing shipper by ID
-router.put('/api/v1/shippers:id', async (req, res) => {
-  try {
-    let pool = await sql.connect(config);
-    let result = await pool.request()
-      .input('id', sql.Int, req.params.id)
-      .input('CompanyName', sql.VarChar(255), req.body.CompanyName)
-      .input('Phone', sql.VarChar(16), req.body.Phone)
-      .query('UPDATE Shippers SET CompanyName = @CompanyName, Phone = @Phone WHERE ShipperID = @id');
-
-    if (result.rowsAffected[0] === 0) {
-      res.status(404).send('Shipper not found');
-    } else {
-      res.send('Shipper updated');
-    }
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Server error');
-  }
+// Update a shipper
+router.put('/api/v1/shippers/:id', (req, res) => {
+  const { id } = req.params;
+  const { CompanyName, Phone } = req.body;
+  const sql = `UPDATE Shippers SET CompanyName = ${mysql.escape(CompanyName)}, Phone = ${mysql.escape(Phone)} WHERE ShipperID = ${mysql.escape(id)}`;
+  connection.query(sql, error => {
+    if (error) throw error;
+    const updatedShipper = { ShipperID: Number(id), CompanyName, Phone };
+    res.json(updatedShipper);
+  });
 });
 
-// DELETE a shipper by ID
-router.delete('/api/v1/shippers:id', async (req, res) => {
-  try {
-    let pool = await sql.connect(config);
-    let result = await pool.request()
-      .input('id', sql.Int, req.params.id)
-      .query('DELETE FROM Shippers WHERE ShipperID = @id');
-
-    if (result.rowsAffected[0] === 0) {
-      res.status(404).send('Shipper not found');
-    } else {
-      res.send('Shipper deleted');
-    }
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Server error');
-  }
+// Delete a shipper
+router.delete('/api/v1/shippers/:id', (req, res) => {
+  const { id } = req.params;
+  const sql = `DELETE FROM Shippers WHERE ShipperID = ${mysql.escape(id)}`;
+  connection.query(sql, error => {
+    if (error) throw error;
+    res.json({ message: `Shipper with ID ${id} has been deleted.` });
+  });
 });
 
 module.exports = router;

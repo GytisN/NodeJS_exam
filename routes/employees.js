@@ -13,7 +13,7 @@ router.get('/api/v1/employees', (req, res) => {
 });
 
 // GET employee by ID
-router.get('/api/v1/employees:id', (req, res) => {
+router.get('/api/v1/employees/:id', (req, res) => {
   const { id } = req.params;
   const sql = `SELECT * FROM Employees WHERE EmployeeID = ${id}`;
   connection.query(sql, (error, results) => {
@@ -33,7 +33,7 @@ router.post('/api/v1/employees', (req, res) => {
 });
 
 // PUT update employee by ID
-router.put('/api/v1/employees:id', (req, res) => {
+router.put('/api/v1/employees/:id', (req, res) => {
   const { id } = req.params;
   const { LastName, FirstName, Title, TitleOfCourtesy, BirthDate, HireDate, Adress } = req.body;
   const sql = `UPDATE Employees SET LastName = '${LastName}', FirstName = '${FirstName}', Title = '${Title}', TitleOfCourtesy = '${TitleOfCourtesy}', BirthDate = '${BirthDate}', HireDate = '${HireDate}', Adress = '${Adress}' WHERE EmployeeID = ${id}`;
@@ -44,7 +44,7 @@ router.put('/api/v1/employees:id', (req, res) => {
 });
 
 // DELETE employee by ID
-router.delete('/api/v1/employees:id', (req, res) => {
+router.delete('/api/v1/employees/:id', (req, res) => {
   const { id } = req.params;
   const sql = `DELETE FROM Employees WHERE EmployeeID = ${id}`;
   connection.query(sql, (error, result) => {
